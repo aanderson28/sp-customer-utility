@@ -1,0 +1,29 @@
+{
+    "name": "sp-customer-utility",
+    "version": "1.0.0",
+    "description": "Imports customers data from prod mongo to stage mongo",
+    "author": "Alan Anderson",
+    "license": "ISC",
+    "bin": "./bin/main.js",
+    "files": [
+        "package.json",
+        "bin/"
+    ],
+    "scripts": {
+        "build": "echo building... && npm-run-all build:* && echo done!",
+        "build:ts": "tsc",
+        "clean": "rm -rf bin/",
+        "start": "node bin/main.js",
+        "start:dev": "npm run clean && npm run build && npm run start",
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "prepublish": "npm run build"
+    },
+    "dependencies": {
+        "assert": "^1.4.1",
+        "mongodb": "^3.2.3"
+    },
+    "devDependencies": {
+        "@types/mongodb": "^3.1.26",
+        "npm-run-all": "^4.1.5"
+    }
+}
