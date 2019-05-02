@@ -1,8 +1,8 @@
-import 'dotenv/config';
+import * as config from './config';
 
 const getEnvVars = function() {
-    console.log(process.env.SOURCE_DB_USER);
+    console.log(config.database);
 };
 
-console.log(`Source Password: ${process.env.SOURCE_DB_PW}`);
+console.log(`Source User: ${config.sourceUser}`);
 getEnvVars();
