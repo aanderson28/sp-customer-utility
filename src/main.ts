@@ -1,8 +1,12 @@
-import * as config from './config';
+import Customer from './collections/customer';
 
-const getEnvVars = function() {
-    console.log(config.database);
+// Create a new Customer objects
+const customer = new Customer('source', 'Castle Brands');
+
+// Returns the customer objects
+const getCustomer = function() {
+    customer.findCustomer();
+    // console.log(cus);
 };
 
-console.log(`Source User: ${config.sourceUser}`);
-getEnvVars();
+getCustomer();

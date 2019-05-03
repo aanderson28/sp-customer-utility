@@ -7,14 +7,14 @@
         "preserveConstEnums": true,
         "moduleResolution": "node",
         "sourceMap": true,
-        "outDir": "./bin",
+        "outDir": "bin",
         "allowJs": true,
         "lib": ["es2017", "esnext.asynciterable"],
     },
     "include": [
-        "./src/**/*",
+        "src/**/*",
     ],
     "exclude": [
-        "./node_modules",
+        "node_modules",
     ]
 }
