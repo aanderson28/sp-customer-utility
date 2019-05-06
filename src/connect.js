@@ -2,32 +2,6 @@ const { sourceURL, destinationURL, database } = require('./config');
 const { MongoClient } = require('mongodb');
 const assert = require('assert');
 
-// const clientPromise = dbInstance => {
-//     return new Promise((resolve, reject) => {
-//         if (dbInstance.toLowerCase() === 'source') {
-//             console.log('Source URL: ' + sourceURL);
-//             MongoClient.connect(sourceURL, { useNewUrlParser: true }, (err, client) => {
-//                 if (err) {
-//                     console.log('Not Connected');
-//                     reject(err);
-//                 } else {
-//                     console.log('Connected');
-//                     resolve(client);
-//                 }
-//             });
-//         } else {
-//             console.log('Destination URL: ' + destinationURL);
-//             MongoClient.connect(destinationURL, { useNewUrlParser: true }, (err, client) => {
-//                 if (err) {
-//                     reject(err);
-//                 } else {
-//                     resolve(client);
-//                 }
-//             });
-//         }
-//     });
-// };
-
 const connectToDB = (dbInstance, collectionName) => {
     try {
         return new Promise((resolve, reject) => {
@@ -36,22 +10,22 @@ const connectToDB = (dbInstance, collectionName) => {
                     assert.equal(null, err);
                     console.log('Connected Successfully');
 
-                    const db = client.db(database);
-
-                    db
-                        .collection(collectionName)
-                        .find({name: 'Castle Brands'})
-                        .toArray((err, data) => {
-                            err
-                                ? reject(err)
-                                : resolve(data[0]);
-                        });
+                    if(err) {
+                        reject(err);
+                    }
+                    resolve(client);
                 });
             } else {
-                MongoClient.connect(destinationURL, {useNewUrlParser: true}, (err, client) => {
-                    assert.equal(null, err);
-                    console.log('Connected Successfully');
-                });
+                if(!destinationURL.includes('ds04', 0)) {
+                    MongoClient.connect(destinationURL, {useNewUrlParser: true}, (err, client) => {
+                        assert.equal(null, err);
+                        console.log('Connected Successfully');
+                        if(err) {
+                            reject(err);
+                        }
+                        resolve(client);
+                    });
+                }
             }
         });
     } catch (e) {
