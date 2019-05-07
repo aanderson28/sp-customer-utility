@@ -27,7 +27,7 @@ export const destinationURL = [
     'mongodb://',
     destinationUser + ':',
     destinationPW,
-    destinationHost + ':',
+    destinationHost + '/',
     database + '?',
     `replicaSet=rs-ds0${destinationPort}`,
 ].join('');
