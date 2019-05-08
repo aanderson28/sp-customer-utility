@@ -2,6 +2,7 @@ const { sourceURL, destinationURL } = require('./config');
 const { MongoClient } = require('mongodb');
 const assert = require('assert');
 
+// Set up the connection to the database
 const connectToDB = (dbInstance) => {
     try {
         return new Promise((resolve, reject) => {
@@ -24,6 +25,8 @@ const connectToDB = (dbInstance) => {
                         }
                         resolve(client);
                     });
+                } else {
+                    throw new Error('Destination cannot be Production database.');
                 }
             }
         });
