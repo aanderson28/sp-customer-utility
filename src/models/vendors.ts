@@ -1,7 +1,7 @@
 // Create the interface for Retail Link Vendors
 interface IRLVendors {
     _id: string;
-    id: number;
+    id: string;
     name?: string;
     data_available?: string;
 }
@@ -9,7 +9,7 @@ interface IRLVendors {
 // Create the interface for Walmart Vendors
 interface IWMVendors {
     _id: string;
-    vendor: number;
+    vendor: string;
     name?: string;
 }
 
