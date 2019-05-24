@@ -2,25 +2,26 @@ const connectToDB = require('../connect');
 import ICustomer from '../models/customers';
 import getMongoId from '../utils/get-mongo-object-id';
 import toJSON from '../utils/to-json';
-import toJson from '../utils/to-json';
 
 const collectionName = 'rl-customers';
 
+// Create class for the Customers collection
 class Customer {
+    // Find the Customer based on the Customer _ID
     async find(customerName: string) {
         try {
             const client = await connectToDB('source');
             const collection = await client.db().collection(collectionName);
             const result = await collection.findOne({ name: customerName });
             client.close();
-            console.log(result);
-            console.log(toJSON(result));
             return toJSON(result);
         } catch (e) {
             throw new Error(e);
         }
     }
 
+    // Imports the Customer document 
+    // Inserts the document if not found
     async import(document: ICustomer) {
         try {
             const {_id, ...doc} = document;
@@ -34,7 +35,7 @@ class Customer {
                 { upsert: false }
             );
             client.close();
-            console.log(res);
+            // console.log(res);
         } catch (e) {
             throw new Error(e);
         }

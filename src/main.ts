@@ -13,11 +13,12 @@ const products = new Products();
 const getCustomer = async () => {
     const cus = await customer.find('Castle Brands');
     console.log('Customer: ' + cus);
-    await customer.import(cus);
-    // const cred = await credentials.find(cus);
-    // console.log('Credentials: ' + cred._id);
-    // const rlVendor = await vendors.findRL(cred.vendors);
-    // console.log('RL Vendors: ' + rlVendor[0].id);
+    // await customer.import(cus);
+    const cred = await credentials.find(cus);
+    console.log('Credentials: ' + cred._id);
+    // await credentials.import(cred);
+    const rlVendor = await vendors.findRL(cred.vendors);
+    console.log('RL Vendors: ' + rlVendor[0].id);
     // const wmVendors = await vendors.findWM(rlVendor);
     // // console.log('WM Vendors: ' + wmVendors);
     // const product = await products.find(rlVendor);

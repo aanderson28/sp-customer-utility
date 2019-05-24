@@ -7,7 +7,9 @@ import toJson from '../utils/to-json';
 const wmVendors = 'wm-vendors';
 const rlVendors = 'rl-vendors';
 
+// Create class for handling Vendor collections
 class Vendors {
+    // Finds the list of rl-vendors
     async findRL(vendors: any[]) {
         const client = await connectToDB('source');
         const collection = await client.db().collection(rlVendors);
@@ -24,6 +26,8 @@ class Vendors {
         return toJson(results);
     }
 
+    // Imports the list of rl-vendors
+    // Or inserts if not present
     async importRL(vendor: IRLVendors) {
         const client = await connectToDB('destination');
         const collection = await client.db().collection(rlVendors);
@@ -31,6 +35,7 @@ class Vendors {
         client.close();
     }
 
+    // Find the list of wm-vendors
     async findWM(vendors: any[]) {
         const client = await connectToDB('source');
         const collection = await client.db().collection(wmVendors);
@@ -40,6 +45,8 @@ class Vendors {
         return toJson(results);
     }
 
+    // Imports the list of wm-vendors
+    // Or inserts if not present
     async importWM(vendor: IWMVendors) {
         const client = await connectToDB('destination');
         const collection = await client.db().collection(wmVendors);
