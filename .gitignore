@@ -6,3 +6,4 @@ bin/
 
 # Misc.
 .env
+sp-utility.code-workspace

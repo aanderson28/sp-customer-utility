@@ -13,6 +13,8 @@ class Customer {
             const collection = await client.db().collection(collectionName);
             const result = await collection.findOne({ name: customerName });
             client.close();
+            console.log(result);
+            console.log(toJSON(result));
             return toJSON(result);
         } catch (e) {
             throw new Error(e);
@@ -21,12 +23,14 @@ class Customer {
 
     async import(document: ICustomer) {
         try {
-            const id = getMongoId(document._id);
+            const {_id, ...doc} = document;
             const client = await connectToDB('destination');
             const collection = await client.db().collection(collectionName);
             const res = await collection.updateOne(
-                { _id: id },
-                { document },
+                { _id: getMongoId(document._id) },
+                { $set:
+                    doc
+                },
                 { upsert: false }
             );
             client.close();
