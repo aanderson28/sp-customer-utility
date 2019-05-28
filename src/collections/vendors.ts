@@ -9,48 +9,75 @@ const rlVendors = 'rl-vendors';
 
 // Create class for handling Vendor collections
 class Vendors {
-    // Finds the list of rl-vendors
-    async findRL(vendors: any[]) {
+    // Finds the list of rl-vendors pulled from Credentials
+    async findRL(vendors: string[]) {
         const client = await connectToDB('source');
         const collection = await client.db().collection(rlVendors);
-        const results = await collection
-            .find({
+        const results = await collection.find(
+            {
                 _id: {
                     $in: vendors.map(vendor => {
                         return getMongoId(vendor);
                     }),
                 },
-            })
-            .toArray();
+            }
+        ).toArray();
         client.close();
         return toJson(results);
     }
 
-    // Imports the list of rl-vendors
+    // Imports the list of rl-vendors documents
     // Or inserts if not present
-    async importRL(vendor: IRLVendors) {
+    async importRL(documents: IRLVendors[]) {
         const client = await connectToDB('destination');
         const collection = await client.db().collection(rlVendors);
-        const result = await collection.update();
+        documents.forEach(async (document, index) => {
+            const {_id, ...doc} = document;
+            await collection.updateOne(
+                { _id: getMongoId(_id) },
+                { $set: doc},
+                { upsert: false }
+            );
+            if((documents.length - 1) === index) {
+                client.close();
+            }
+        });
         client.close();
     }
 
     // Find the list of wm-vendors
-    async findWM(vendors: any[]) {
+    async findWM(vendors: IRLVendors[]) {
         const client = await connectToDB('source');
         const collection = await client.db().collection(wmVendors);
-        const results = await collection.find({ vendor: { $in: [vendors[0].id] } }).toArray();
+        const results = await collection.find(
+            { vendor:
+                { $in: vendors.map(ven => {
+                        return ven.id;
+                    })
+                }
+            }
+        ).toArray();
         client.close();
-        console.log('Walmart Vendor: ' + JSON.stringify(results));
+        console.log('Walmart Vendor: ' + results);
         return toJson(results);
     }
 
     // Imports the list of wm-vendors
     // Or inserts if not present
-    async importWM(vendor: IWMVendors) {
+    async importWM(documents: IWMVendors[]) {
         const client = await connectToDB('destination');
         const collection = await client.db().collection(wmVendors);
-        const result = await collection.update();
+        documents.forEach(async (document, index) => {
+            const {_id, ...doc} = document;
+            await collection.updateOne(
+                { _id: getMongoId(_id) },
+                { $set: doc },
+                { upsert: false }
+            );
+            if((documents.length - 1) === index) {
+                client.close();
+            }
+        });
         client.close();
     }
 }

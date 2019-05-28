@@ -12,17 +12,19 @@ const products = new Products();
 // Returns the customer objects
 const getCustomer = async () => {
     const cus = await customer.find('Castle Brands');
-    console.log('Customer: ' + cus);
+    // console.log('Customer: ' + cus);
     // await customer.import(cus);
     const cred = await credentials.find(cus);
-    console.log('Credentials: ' + cred._id);
+    // console.log('Credentials: ' + cred._id);
     // await credentials.import(cred);
-    const rlVendor = await vendors.findRL(cred.vendors);
-    console.log('RL Vendors: ' + rlVendor[0].id);
-    // const wmVendors = await vendors.findWM(rlVendor);
-    // // console.log('WM Vendors: ' + wmVendors);
-    // const product = await products.find(rlVendor);
-    // console.log('Products: ' + product);
+    const rlVendors = await vendors.findRL(cred.vendors);
+    // console.log('RL Vendors: ' + rlVendors[0].id);
+    // await vendors.importRL(rlVendors);
+    // const wmVendors = await vendors.findWM(rlVendors);
+    // console.log('WM Vendors: ' + wmVendors[0].vendor);
+    // await vendors.importWM(wmVendors);
+    const product = await products.find(rlVendors);
+    console.log(product);
 };
 
 getCustomer();

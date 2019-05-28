@@ -35,7 +35,6 @@ class Customer {
                 { upsert: false }
             );
             client.close();
-            // console.log(res);
         } catch (e) {
             throw new Error(e);
         }

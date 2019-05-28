@@ -18,8 +18,6 @@ class Credentials {
                 $and: [{ customer_id: getMongoId(cusDocument._id) }, { active: true }],
             });
             client.close();
-            console.log(toJson(result));
-            console.log(result._id);
             return toJson(result);
         } catch (e) {
             throw new Error(e);
@@ -56,8 +54,6 @@ class Credentials {
                 }
             );
             client.close();
-            // console.log(res);
-            // console.log(res2);
         } catch (e) {
             throw new Error(e);
         }
