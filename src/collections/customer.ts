@@ -12,14 +12,7 @@ class Customer {
         try {
             const client = await connectToDB('source');
             const collection = await client.db().collection(collectionName);
-            const result = await collection.findOne(
-                {
-                    $or: [
-                        {_id: getMongoId(customerName)},
-                        { name: customerName }
-                    ]
-                }
-            );
+            const result = await collection.findOne({_id: getMongoId(customerName)});
             client.close();
             return toJSON(result);
         } catch (e) {
@@ -39,7 +32,7 @@ class Customer {
                 { $set:
                     doc
                 },
-                { upsert: false }
+                { upsert: true }
             );
             client.close();
         } catch (e) {

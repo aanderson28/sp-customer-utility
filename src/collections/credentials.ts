@@ -1,5 +1,5 @@
 import getMongoId from '../utils/get-mongo-object-id';
-import toJson from '../utils/to-json';
+import toJSON from '../utils/to-json';
 
 import ICustomer from '../models/customers';
 import ICredentials from '../models/credentials';
@@ -18,7 +18,7 @@ class Credentials {
                 $and: [{ customer_id: getMongoId(cusDocument._id) }, { active: true }],
             });
             client.close();
-            return toJson(result);
+            return toJSON(result);
         } catch (e) {
             throw new Error(e);
         }
@@ -37,7 +37,7 @@ class Credentials {
             await collection.updateOne(
                 { $and: [{_id: getMongoId(document._id)}, {active: true}] },
                 { $set: doc },
-                { upsert: false }
+                { upsert: true }
             );
             await collection.updateOne(
                 { $and: [{_id: getMongoId(document._id)}, {active: true}] },
