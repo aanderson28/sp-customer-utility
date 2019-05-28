@@ -32,7 +32,6 @@ class Products {
         documents.forEach(async (document, index) => {
             const {_id, ...doc} = document;
             if(document.item_number === '570594041') {
-                console.log(document.item_number);
                 await collection.updateOne(
                     { _id: getMongoId(document._id)},
                     { $set: doc},

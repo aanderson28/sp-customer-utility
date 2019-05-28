@@ -10,22 +10,22 @@ const vendors = new Vendors();
 const products = new Products();
 
 // Returns the customer objects
-const getCustomer = async () => {
+const importCustomerByName = async () => {
     const cus = await customer.find('Castle Brands');
-    // console.log('Customer: ' + cus);
-    // await customer.import(cus);
+    await customer.import(cus);
     const cred = await credentials.find(cus);
-    // console.log('Credentials: ' + cred._id);
-    // await credentials.import(cred);
+    await credentials.import(cred);
     const rlVendors = await vendors.findRL(cred.vendors);
-    // console.log('RL Vendors: ' + rlVendors[0].id);
-    // await vendors.importRL(rlVendors);
-    // const wmVendors = await vendors.findWM(rlVendors);
-    // console.log('WM Vendors: ' + wmVendors[0].vendor);
-    // await vendors.importWM(wmVendors);
+    await vendors.importRL(rlVendors);
+    const wmVendors = await vendors.findWM(rlVendors);
+    await vendors.importWM(wmVendors);
     const product = await products.find(rlVendors);
-    // console.log(product);
     products.import(product);
 };
 
-getCustomer();
+// Import customer by Customer ID
+const importCustomerById = async (customerId: string) => {
+    const cusDocument = await customer.find(customerId)
+};
+
+importCustomerByName();

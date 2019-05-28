@@ -34,12 +34,12 @@ class Credentials {
             const {_id, customer_id, suppliers, vendors, ...doc} = document;
             const client = await connectToDB('destination');
             const collection = await client.db().collection(collectionName);
-            const res = await collection.updateOne(
+            await collection.updateOne(
                 { $and: [{_id: getMongoId(document._id)}, {active: true}] },
                 { $set: doc },
                 { upsert: false }
             );
-            const res2 = await collection.updateOne(
+            await collection.updateOne(
                 { $and: [{_id: getMongoId(document._id)}, {active: true}] },
                 { $set:
                     {

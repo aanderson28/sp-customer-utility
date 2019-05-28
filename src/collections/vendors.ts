@@ -55,7 +55,6 @@ class Vendors {
             }
         ).toArray();
         client.close();
-        console.log('Walmart Vendor: ' + results);
         return toJson(results);
     }
 

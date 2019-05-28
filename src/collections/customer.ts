@@ -12,7 +12,14 @@ class Customer {
         try {
             const client = await connectToDB('source');
             const collection = await client.db().collection(collectionName);
-            const result = await collection.findOne({ name: customerName });
+            const result = await collection.findOne(
+                {
+                    $or: [
+                        {_id: getMongoId(customerName)},
+                        { name: customerName }
+                    ]
+                }
+            );
             client.close();
             return toJSON(result);
         } catch (e) {
@@ -20,14 +27,14 @@ class Customer {
         }
     }
 
-    // Imports the Customer document 
+    // Imports the Customer document
     // Inserts the document if not found
     async import(document: ICustomer) {
         try {
             const {_id, ...doc} = document;
             const client = await connectToDB('destination');
             const collection = await client.db().collection(collectionName);
-            const res = await collection.updateOne(
+            await collection.updateOne(
                 { _id: getMongoId(document._id) },
                 { $set:
                     doc

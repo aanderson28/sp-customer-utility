@@ -9,7 +9,6 @@ const connectToDB = (dbInstance) => {
             if(dbInstance.toLowerCase() === 'source') {
                 MongoClient.connect(sourceURL, {useNewUrlParser: true}, (err, client) => {
                     assert.equal(null, err);
-                    // console.log('Connected to Source Successfully');
                     if(err) {
                         reject(err);
                     }
@@ -19,7 +18,6 @@ const connectToDB = (dbInstance) => {
                 if(!destinationURL.includes('ds04', 0)) {
                     MongoClient.connect(destinationURL, {useNewUrlParser: true}, (err, client) => {
                         assert.equal(null, err);
-                        console.log('Connected to Destination Successfully');
                         if(err) {
                             reject(err);
                         }
