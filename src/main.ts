@@ -24,7 +24,8 @@ const getCustomer = async () => {
     // console.log('WM Vendors: ' + wmVendors[0].vendor);
     // await vendors.importWM(wmVendors);
     const product = await products.find(rlVendors);
-    console.log(product);
+    // console.log(product);
+    products.import(product);
 };
 
 getCustomer();

@@ -31,16 +31,13 @@ class Vendors {
     async importRL(documents: IRLVendors[]) {
         const client = await connectToDB('destination');
         const collection = await client.db().collection(rlVendors);
-        documents.forEach(async (document, index) => {
+        documents.forEach(async (document) => {
             const {_id, ...doc} = document;
             await collection.updateOne(
                 { _id: getMongoId(_id) },
                 { $set: doc},
                 { upsert: false }
             );
-            if((documents.length - 1) === index) {
-                client.close();
-            }
         });
         client.close();
     }
@@ -67,16 +64,13 @@ class Vendors {
     async importWM(documents: IWMVendors[]) {
         const client = await connectToDB('destination');
         const collection = await client.db().collection(wmVendors);
-        documents.forEach(async (document, index) => {
+        documents.forEach(async (document) => {
             const {_id, ...doc} = document;
             await collection.updateOne(
                 { _id: getMongoId(_id) },
                 { $set: doc },
                 { upsert: false }
             );
-            if((documents.length - 1) === index) {
-                client.close();
-            }
         });
         client.close();
     }

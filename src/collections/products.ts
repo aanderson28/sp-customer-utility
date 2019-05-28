@@ -1,6 +1,7 @@
-import getMongoObjectId from '../utils/get-mongo-object-id';
 import { IRLVendors } from '../models/vendors';
 import toJson from '../utils/to-json';
+import IProducts from '../models/products';
+import getMongoId from '../utils/get-mongo-object-id';
 
 const connectToDB = require('../connect');
 
@@ -10,7 +11,6 @@ const collectionName = 'wm-products';
 class Products {
     // Find the list of products for each vendor
     async find(vendors: IRLVendors[]) {
-        console.log('Product Vendor: ' + vendors[0].id);
         const client = await connectToDB('source');
         const collection = await client.db().collection(collectionName);
         const results = await collection.find(
@@ -26,8 +26,21 @@ class Products {
         return toJson(results);
     }
 
-    async import(documents: any[]) {
-
+    async import(documents: IProducts[]) {
+        const client = await connectToDB('destination');
+        const collection = await client.db().collection(collectionName);
+        documents.forEach(async (document, index) => {
+            const {_id, ...doc} = document;
+            if(document.item_number === '570594041') {
+                console.log(document.item_number);
+                await collection.updateOne(
+                    { _id: getMongoId(document._id)},
+                    { $set: doc},
+                    { upsert: false }
+                );
+            }
+        });
+        client.close();
     }
 }
 
