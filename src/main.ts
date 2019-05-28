@@ -2,7 +2,6 @@ import Customer from './collections/customer';
 import Credentials from './collections/credentials';
 import Vendors from './collections/vendors';
 import Products from './collections/products';
-import { join } from 'path';
 
 // Create a new collections objects
 const customer = new Customer();

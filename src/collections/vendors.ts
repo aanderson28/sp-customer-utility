@@ -3,7 +3,6 @@ const connectToDB = require('../connect');
 import { IRLVendors, IWMVendors } from '../models/vendors';
 import getMongoId from '../utils/get-mongo-object-id';
 import toJSON from '../utils/to-json';
-import { resolve } from 'dns';
 
 const wmVendors = 'wm-vendors';
 const rlVendors = 'rl-vendors';
