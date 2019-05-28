@@ -9,27 +9,27 @@ const credentials = new Credentials();
 const vendors = new Vendors();
 const products = new Products();
 
-// Update all other collections based on customer
-const updateCollections = async (customer: any) => {
-    const cred = await credentials.find(customer);
-    await credentials.import(cred);
-    const rlVendors = await vendors.findRL(cred.vendors);
-    await vendors.importRL(rlVendors);
-    const wmVendors = await vendors.findWM(rlVendors);
-    await vendors.importWM(wmVendors);
-    const product = await products.find(rlVendors);
-    await products.import(product);
-};
-
 // Import customer by Customer ID
 const importCustomerById = async (customerId: string) => {
     if(customerId) {
+        // Find and import the customer document
         const cusDocument = await customer.find(customerId)
         await customer.import(cusDocument);
-        updateCollections(cusDocument);
+        // Find & Import the credentials document
+        const cred = await credentials.find(cusDocument);
+        await credentials.import(cred);
+        // Find & Import the rl-vendors documents
+        const rlVendors = await vendors.findRL(cred.vendors);
+        await vendors.importRL(rlVendors);
+        // Find & Import the wm-vendors documents
+        const wmVendors = await vendors.findWM(rlVendors);
+        await vendors.importWM(wmVendors);
+        // Find & Import the product documents
+        const product = await products.find(rlVendors);
+        await products.import(product);
         console.log('Import Finished');
     } else {
-        console.log('Forgot to pass Customer Id');
+        console.error('Forgot to pass Customer Id');
     }
 };
 
