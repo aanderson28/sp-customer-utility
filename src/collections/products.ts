@@ -13,7 +13,7 @@ class Products {
     async find(vendors: IRLVendors[]) {
         try {
             const client = await connectToDB('source');
-            const collection = await client.db().collection(collectionName);
+            const collection = client.db().collection(collectionName);
             const results = await collection.find(
                 {
                     vendor:
@@ -24,6 +24,7 @@ class Products {
                 }
             ).toArray();
             client.close();
+            console.log('Products: ' + results.length);
             return toJSON(results);
         } catch (e) {
             throw new Error(e);
@@ -34,7 +35,7 @@ class Products {
     async import(documents: IProducts[]) {
         try {
             const client = await connectToDB('destination');
-            const collection = await client.db().collection(collectionName);
+            const collection = client.db().collection(collectionName);
             documents.forEach(async (document, index) => {
                 const {_id, ...doc} = document;
                 await collection.updateOne(
@@ -42,8 +43,10 @@ class Products {
                     { $set: doc},
                     { upsert: true }
                 );
+                if((documents.length - 1) === index) {
+                    client.close();
+                }
             });
-            client.close();
         } catch (e) {
             throw new Error(e);
         }

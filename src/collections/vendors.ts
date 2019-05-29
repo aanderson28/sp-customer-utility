@@ -13,7 +13,7 @@ class Vendors {
     async findRL(vendors: string[]) {
         try {
             const client = await connectToDB('source');
-            const collection = await client.db().collection(rlVendors);
+            const collection = client.db().collection(rlVendors);
             const results = await collection.find(
                 {
                     _id: {
@@ -35,16 +35,18 @@ class Vendors {
     async importRL(documents: IRLVendors[]) {
         try {
             const client = await connectToDB('destination');
-            const collection = await client.db().collection(rlVendors);
-            documents.forEach(async (document) => {
+            const collection = client.db().collection(rlVendors);
+            documents.forEach(async (document, index) => {
                 const {_id, ...doc} = document;
                 await collection.updateOne(
                     { _id: getMongoId(_id) },
                     { $set: doc},
                     { upsert: true }
                 );
+                if((documents.length - 1) === index) {
+                    client.close();
+                }
             });
-            client.close();
         } catch (e) {
             throw new Error(e);
         }
@@ -54,7 +56,7 @@ class Vendors {
     async findWM(vendors: IRLVendors[]) {
         try {
             const client = await connectToDB('source');
-            const collection = await client.db().collection(wmVendors);
+            const collection = client.db().collection(wmVendors);
             const results = await collection.find(
                 { vendor:
                     { $in: vendors.map(ven => {
@@ -75,16 +77,18 @@ class Vendors {
     async importWM(documents: IWMVendors[]) {
         try {
             const client = await connectToDB('destination');
-            const collection = await client.db().collection(wmVendors);
-            documents.forEach(async (document) => {
+            const collection = client.db().collection(wmVendors);
+            documents.forEach(async (document, index) => {
                 const {_id, ...doc} = document;
                 await collection.updateOne(
                     { _id: getMongoId(_id) },
                     { $set: doc },
                     { upsert: true }
                 );
+                if((documents.length) - 1 === index) {
+                    client.close();
+                }
             });
-            client.close();
         } catch (e) {
             throw new Error(e);
 

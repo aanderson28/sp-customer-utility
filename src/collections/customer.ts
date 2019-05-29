@@ -11,7 +11,7 @@ class Customer {
     async find(customerName: string) {
         try {
             const client = await connectToDB('source');
-            const collection = await client.db().collection(collectionName);
+            const collection = client.db().collection(collectionName);
             const result = await collection.findOne({_id: getMongoId(customerName)});
             client.close();
             return toJSON(result);
@@ -26,7 +26,7 @@ class Customer {
         try {
             const {_id, ...doc} = document;
             const client = await connectToDB('destination');
-            const collection = await client.db().collection(collectionName);
+            const collection = client.db().collection(collectionName);
             await collection.updateOne(
                 { _id: getMongoId(document._id) },
                 { $set:
