@@ -16,4 +16,5 @@ Setup
     - DB_NAME
     
 Run
+
     node main.js '{CustomerID}'
