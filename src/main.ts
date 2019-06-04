@@ -13,7 +13,7 @@ const products = new Products();
 const importCustomerById = async (customerId: string) => {
     if(customerId) {
         // Find and import the customer document
-        const cusDocument = await customer.find(customerId)
+        const cusDocument = await customer.find(customerId);
         await customer.import(cusDocument);
         // Find & Import the credentials document
         const cred = await credentials.find(cusDocument);

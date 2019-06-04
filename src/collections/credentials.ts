@@ -3,7 +3,7 @@ import toJSON from '../utils/to-json';
 
 import ICustomer from '../models/customers';
 import ICredentials from '../models/credentials';
-const connectToDB = require('../connect');
+import DbClient from '../connect';
 
 const collectionName = 'rl-credentials';
 
@@ -12,7 +12,7 @@ class Credentials {
     // Finds the active credentials for the given customer
     async find(cusDocument: ICustomer) {
         try {
-            const client = await connectToDB('source');
+            const client = await DbClient.connect('source');
             const collection = client.db().collection(collectionName);
             const result = await collection.findOne({
                 $and: [{ customer_id: getMongoId(cusDocument._id) }, { active: true }],
@@ -32,7 +32,7 @@ class Credentials {
     async import(document: ICredentials) {
         try {
             const {_id, customer_id, suppliers, vendors, ...doc} = document;
-            const client = await connectToDB('destination');
+            const client = await DbClient.connect('destination');
             const collection = client.db().collection(collectionName);
             await collection.updateOne(
                 { $and: [{_id: getMongoId(document._id)}, {active: true}] },

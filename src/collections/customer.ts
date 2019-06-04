@@ -1,4 +1,4 @@
-const connectToDB = require('../connect');
+import DbClient from '../connect';
 import ICustomer from '../models/customers';
 import getMongoId from '../utils/get-mongo-object-id';
 import toJSON from '../utils/to-json';
@@ -10,13 +10,13 @@ class Customer {
     // Find the Customer based on the Customer _ID
     async find(customerName: string) {
         try {
-            const client = await connectToDB('source');
+            const client = await DbClient.connect('source');
             const collection = client.db().collection(collectionName);
             const result = await collection.findOne({_id: getMongoId(customerName)});
             client.close();
             return toJSON(result);
         } catch (e) {
-            throw new Error(e);
+            console.log(e);
         }
     }
 
@@ -25,10 +25,10 @@ class Customer {
     async import(document: ICustomer) {
         try {
             const {_id, ...doc} = document;
-            const client = await connectToDB('destination');
+            const client = await DbClient.connect('destination');
             const collection = client.db().collection(collectionName);
             await collection.updateOne(
-                { _id: getMongoId(document._id) },
+                { _id: getMongoId(_id) },
                 { $set:
                     doc
                 },
@@ -36,7 +36,7 @@ class Customer {
             );
             client.close();
         } catch (e) {
-            throw new Error(e);
+            console.log(e);
         }
     }
 }

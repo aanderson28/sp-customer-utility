@@ -1,9 +1,8 @@
+import DbClient from '../connect';
 import { IRLVendors } from '../models/vendors';
 import toJSON from '../utils/to-json';
 import IProducts from '../models/products';
 import getMongoId from '../utils/get-mongo-object-id';
-
-const connectToDB = require('../connect');
 
 const collectionName = 'wm-products';
 
@@ -12,7 +11,7 @@ class Products {
     // Find the list of products for each vendor
     async find(vendors: IRLVendors[]) {
         try {
-            const client = await connectToDB('source');
+            const client = await DbClient.connect('source');
             const collection = client.db().collection(collectionName);
             const results = await collection.find(
                 {
@@ -34,7 +33,7 @@ class Products {
     // Updates/Inserts the list of product documents
     async import(documents: IProducts[]) {
         try {
-            const client = await connectToDB('destination');
+            const client = await DbClient.connect('destination');
             const collection = client.db().collection(collectionName);
             documents.forEach(async (document, index) => {
                 const {_id, ...doc} = document;

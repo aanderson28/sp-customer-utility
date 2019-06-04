@@ -1,5 +1,5 @@
 // Imports the connection to mongodb
-const connectToDB = require('../connect');
+import DbClient from '../connect';
 import { IRLVendors, IWMVendors } from '../models/vendors';
 import getMongoId from '../utils/get-mongo-object-id';
 import toJSON from '../utils/to-json';
@@ -12,7 +12,7 @@ class Vendors {
     // Finds the list of rl-vendors pulled from Credentials
     async findRL(vendors: string[]) {
         try {
-            const client = await connectToDB('source');
+            const client = await DbClient.connect('source');
             const collection = client.db().collection(rlVendors);
             const results = await collection.find(
                 {
@@ -34,7 +34,7 @@ class Vendors {
     // Or inserts if not present
     async importRL(documents: IRLVendors[]) {
         try {
-            const client = await connectToDB('destination');
+            const client = await DbClient.connect('destination');
             const collection = client.db().collection(rlVendors);
             documents.forEach(async (document, index) => {
                 const {_id, ...doc} = document;
@@ -55,7 +55,7 @@ class Vendors {
     // Find the list of wm-vendors
     async findWM(vendors: IRLVendors[]) {
         try {
-            const client = await connectToDB('source');
+            const client = await DbClient.connect('source');
             const collection = client.db().collection(wmVendors);
             const results = await collection.find(
                 { vendor:
@@ -76,7 +76,7 @@ class Vendors {
     // Or inserts if not present
     async importWM(documents: IWMVendors[]) {
         try {
-            const client = await connectToDB('destination');
+            const client = await DbClient.connect('destination');
             const collection = client.db().collection(wmVendors);
             documents.forEach(async (document, index) => {
                 const {_id, ...doc} = document;
