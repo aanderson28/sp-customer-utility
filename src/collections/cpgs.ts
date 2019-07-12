@@ -32,7 +32,7 @@ class Cpg {
             const client = await DbClient.connect('destination');
             const collection = client.db(database).collection(collectionName);
             await collection.updateOne(
-                { _id: getMongoId(_id) },
+                { $or: [{ _id: getMongoId(_id) }, { 'dataStreams.streamId': doc.streamId }] },
                 { $set: doc },
                 { upsert: true }
             );
