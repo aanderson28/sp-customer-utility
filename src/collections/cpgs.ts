@@ -26,6 +26,7 @@ class Cpg {
         }
     }
 
+    // Import/Update the CPG document in destination
     async import(document: ICpg) {
         try {
             const { _id, ...doc } = document;
