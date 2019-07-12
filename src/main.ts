@@ -2,9 +2,11 @@ import Customer from './collections/customer';
 import Credentials from './collections/credentials';
 import Vendors from './collections/vendors';
 import Products from './collections/products';
+import Cpg from './collections/cpgs';
 
 // Create a new collections objects
 const customer = new Customer();
+const cpg = new Cpg();
 const credentials = new Credentials();
 const vendors = new Vendors();
 const products = new Products();
@@ -15,6 +17,9 @@ const importCustomerById = async (customerId: string) => {
         // Find and import the customer document
         const cusDocument = await customer.find(customerId);
         await customer.import(cusDocument);
+        // Find and import the cpgs document
+        const cpgDocument = await cpg.find(customerId);
+        await cpg.import(cpgDocument);
         // Find & Import the credentials document
         const cred = await credentials.find(cusDocument);
         await credentials.import(cred);

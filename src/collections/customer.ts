@@ -8,11 +8,11 @@ const collectionName = 'rl-customers';
 // Create class for the Customers collection
 class Customer {
     // Find the Customer based on the Customer _ID
-    async find(customerName: string) {
+    async find(customerId: string) {
         try {
             const client = await DbClient.connect('source');
             const collection = client.db().collection(collectionName);
-            const result = await collection.findOne({_id: getMongoId(customerName)});
+            const result = await collection.findOne({_id: getMongoId(customerId)});
             client.close();
             return toJSON(result);
         } catch (e) {
@@ -29,9 +29,7 @@ class Customer {
             const collection = client.db().collection(collectionName);
             await collection.updateOne(
                 { _id: getMongoId(_id) },
-                { $set:
-                    doc
-                },
+                { $set: doc },
                 { upsert: true }
             );
             client.close();
