@@ -7,7 +7,8 @@ Setup
     
 1. Create a .env file in the run directory with the list of environment variables defined.(Make sure the database is retail-link)
     - SOURCE_URL
-    - DEST_URL note: for localhost use mongodb://localhost:27017/<dbName>
+    - DEST_URL 
+    Note: for localhost use mongodb://localhost:27017/<dbName>
     
 Run
 
