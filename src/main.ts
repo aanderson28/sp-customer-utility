@@ -3,6 +3,8 @@ import Credentials from './collections/credentials';
 import Vendors from './collections/vendors';
 import Products from './collections/products';
 import Cpg from './collections/cpgs';
+import Dashboards from './collections/dashboards';
+import Viewers from './collections/viewers';
 
 // Create a new collections objects
 const customer = new Customer();
@@ -22,6 +24,7 @@ const importCustomerById = async (customerId: string) => {
         await cpg.import(cpgDocument);
         // Find & Import the credentials document
         const cred = await credentials.find(cusDocument);
+        console.log(cred);
         await credentials.import(cred);
         // Find & Import the rl-vendors documents
         const rlVendors = await vendors.findRL(cred.vendors);
@@ -38,5 +41,22 @@ const importCustomerById = async (customerId: string) => {
     }
 };
 
-// importCustomerByName('Castle Brands');
+// const deleteDashboards = async () => {
+//     const Dashboard = new Dashboards();
+//     const dashboards = await Dashboard.findAll('Walmart Supplier Scorecard');
+
+//     if (Array.isArray(dashboards) && dashboards.length > 0) {
+//         dashboards.forEach(dashboard => {
+//             console.log('Dashboard ID: ' + dashboard._id);
+//             dashboard.authorizedViewers.forEach(async (viewer: string) => {
+//                 let Viewer = new Viewers();
+//                 let viewerDoc = await Viewer.find(viewer);
+//                 await Viewer.removeDashboardAccess(viewerDoc, dashboard._id);
+//             });
+//         });
+//         await Dashboard.delete(dashboards);
+//     }
+// };
+
 importCustomerById(process.argv[2]);
+// deleteDashboards();

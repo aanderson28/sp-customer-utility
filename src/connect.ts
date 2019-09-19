@@ -6,13 +6,13 @@ class DbClient {
     // Connect to the mongo instance
     async connect(dbInstance: string) {
         try {
-            if(!destinationURL.includes('prod')) {
+            if(destinationURL && !destinationURL.includes('prod')) {
                 return dbInstance.toLowerCase() === 'source'
                     ? await MongoClient.connect(sourceURL, {useNewUrlParser: true})
                     : await MongoClient.connect(destinationURL, {useNewUrlParser: true});
             }
-        } catch (error) {
-            console.log('Unable to connect to the database');
+        } catch (e) {
+            console.error(e);
         }
     }
 }
