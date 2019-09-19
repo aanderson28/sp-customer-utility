@@ -24,7 +24,6 @@ const importCustomerById = async (customerId: string) => {
         await cpg.import(cpgDocument);
         // Find & Import the credentials document
         const cred = await credentials.find(cusDocument);
-        console.log(cred);
         await credentials.import(cred);
         // Find & Import the rl-vendors documents
         const rlVendors = await vendors.findRL(cred.vendors);

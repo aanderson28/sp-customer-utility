@@ -3,6 +3,7 @@ import ICustomer from '../models/customers';
 import getMongoId from '../utils/get-mongo-object-id';
 import toJSON from '../utils/to-json';
 
+const database = 'retail-link';
 const collectionName = 'rl-customers';
 
 // Create class for the Customers collection
@@ -11,8 +12,8 @@ class Customer {
     async find(customerId: string) {
         try {
             const client = await DbClient.connect('source');
-            const collection = client.db().collection(collectionName);
-            const result = await collection.findOne({_id: getMongoId(customerId)});
+            const collection = client.db(database).collection(collectionName);
+            const result = await collection.findOne({ _id: getMongoId(customerId) });
             client.close();
             return toJSON(result);
         } catch (e) {
@@ -24,14 +25,10 @@ class Customer {
     // Inserts the document if not found
     async import(document: ICustomer) {
         try {
-            const {_id, ...doc} = document;
+            const { _id, ...doc } = document;
             const client = await DbClient.connect('destination');
-            const collection = client.db().collection(collectionName);
-            await collection.updateOne(
-                { _id: getMongoId(_id) },
-                { $set: doc },
-                { upsert: true }
-            );
+            const collection = client.db(database).collection(collectionName);
+            await collection.updateOne({ _id: getMongoId(_id) }, { $set: doc }, { upsert: true });
             client.close();
         } catch (e) {
             console.log(e);

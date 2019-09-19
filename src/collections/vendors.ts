@@ -4,6 +4,7 @@ import { IRLVendors, IWMVendors } from '../models/vendors';
 import getMongoId from '../utils/get-mongo-object-id';
 import toJSON from '../utils/to-json';
 
+const database = 'retail-link';
 const wmVendors = 'wm-vendors';
 const rlVendors = 'rl-vendors';
 
@@ -13,16 +14,16 @@ class Vendors {
     async findRL(vendors: string[]) {
         try {
             const client = await DbClient.connect('source');
-            const collection = client.db().collection(rlVendors);
-            const results = await collection.find(
-                {
+            const collection = client.db(database).collection(rlVendors);
+            const results = await collection
+                .find({
                     _id: {
                         $in: vendors.map(vendor => {
                             return getMongoId(vendor);
                         }),
                     },
-                }
-            ).toArray();
+                })
+                .toArray();
             client.close();
             return toJSON(results);
         } catch (e) {
@@ -35,15 +36,15 @@ class Vendors {
     async importRL(documents: IRLVendors[]) {
         try {
             const client = await DbClient.connect('destination');
-            const collection = client.db().collection(rlVendors);
+            const collection = client.db(database).collection(rlVendors);
             documents.forEach(async (document, index) => {
-                const {_id, ...doc} = document;
+                const { _id, ...doc } = document;
                 await collection.updateOne(
                     { _id: getMongoId(_id) },
-                    { $set: doc},
+                    { $set: doc },
                     { upsert: true }
                 );
-                if((documents.length - 1) === index) {
+                if (documents.length - 1 === index) {
                     client.close();
                 }
             });
@@ -56,15 +57,16 @@ class Vendors {
     async findWM(vendors: IRLVendors[]) {
         try {
             const client = await DbClient.connect('source');
-            const collection = client.db().collection(wmVendors);
-            const results = await collection.find(
-                { vendor:
-                    { $in: vendors.map(ven => {
+            const collection = client.db(database).collection(wmVendors);
+            const results = await collection
+                .find({
+                    vendor: {
+                        $in: vendors.map(ven => {
                             return ven.id;
-                        })
-                    }
-                }
-            ).toArray();
+                        }),
+                    },
+                })
+                .toArray();
             client.close();
             return toJSON(results);
         } catch (e) {
@@ -77,21 +79,20 @@ class Vendors {
     async importWM(documents: IWMVendors[]) {
         try {
             const client = await DbClient.connect('destination');
-            const collection = client.db().collection(wmVendors);
+            const collection = client.db(database).collection(wmVendors);
             documents.forEach(async (document, index) => {
-                const {_id, ...doc} = document;
+                const { _id, ...doc } = document;
                 await collection.updateOne(
                     { _id: getMongoId(_id) },
                     { $set: doc },
                     { upsert: true }
                 );
-                if((documents.length) - 1 === index) {
+                if (documents.length - 1 === index) {
                     client.close();
                 }
             });
         } catch (e) {
             throw new Error(e);
-
         }
     }
 }
