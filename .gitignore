@@ -7,3 +7,4 @@ bin/
 # Misc.
 .env
 sp-utility.code-workspace
+.DS_store
