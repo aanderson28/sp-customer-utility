@@ -15,26 +15,30 @@ const products = new Products();
 
 // Import customer by Customer ID
 const importCustomerById = async (customerId: string) => {
-    if(customerId) {
+    if (customerId) {
         // Find and import the customer document
         const cusDocument = await customer.find(customerId);
-        await customer.import(cusDocument);
-        // Find and import the cpgs document
-        const cpgDocument = await cpg.find(customerId);
-        await cpg.import(cpgDocument);
-        // Find & Import the credentials document
-        const cred = await credentials.find(cusDocument);
-        await credentials.import(cred);
-        // Find & Import the rl-vendors documents
-        const rlVendors = await vendors.findRL(cred.vendors);
-        await vendors.importRL(rlVendors);
-        // Find & Import the wm-vendors documents
-        const wmVendors = await vendors.findWM(rlVendors);
-        await vendors.importWM(wmVendors);
-        // Find & Import the product documents
-        const product = await products.find(rlVendors);
-        await products.import(product);
-        console.log('Import Finished');
+        if (cusDocument) {
+            await customer.import(cusDocument);
+            // Find and import the cpgs document
+            const cpgDocument = await cpg.find(customerId);
+            await cpg.import(cpgDocument);
+            // Find & Import the credentials document
+            const cred = await credentials.find(cusDocument);
+            await credentials.import(cred);
+            // Find & Import the rl-vendors documents
+            const rlVendors = await vendors.findRL(cred.vendors);
+            await vendors.importRL(rlVendors);
+            // Find & Import the wm-vendors documents
+            const wmVendors = await vendors.findWM(rlVendors);
+            await vendors.importWM(wmVendors);
+            // Find & Import the product documents
+            const product = await products.find(rlVendors);
+            await products.import(product);
+            console.log('Import Finished');
+        } else {
+            console.error(`Import Failed.\r\nNo rl-customer found for ${customerId}`);
+        }
     } else {
         console.error('Forgot to pass Customer Id');
     }
