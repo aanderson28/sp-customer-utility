@@ -13,10 +13,12 @@ const credentials = new Credentials();
     Turns off Machine Learning for the specified customerID
 */
 const deactivateCustomer = async function (customerId: string) {
-    // Find the customer document
-    await customer.deactivate(customerId);
-    await credentials.deactivate(customerId);
-    await cpg.deactivate(customerId);
+    if (customerId) {
+        await customer.deactivate(customerId);
+        await credentials.deactivate(customerId);
+        await cpg.deactivate(customerId);
+        console.log('Finished', 'The Customer has been deactivated successfully!');
+    }
 };
 
 deactivateCustomer(process.argv[2]);

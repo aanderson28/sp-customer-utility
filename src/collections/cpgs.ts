@@ -63,6 +63,7 @@ class Cpg {
                 { 'dataStreams.streamId': customerId },
                 { $set: { 'machineLearning.active': false } }
             );
+            client.close();
         } catch (e) {
             console.warn(e);
         }

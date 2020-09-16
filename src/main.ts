@@ -3,8 +3,8 @@ import Credentials from './collections/credentials';
 import Vendors from './collections/vendors';
 import Products from './collections/products';
 import Cpg from './collections/cpgs';
-import Dashboards from './collections/dashboards';
-import Viewers from './collections/viewers';
+// import Dashboards from './collections/dashboards';
+// import Viewers from './collections/viewers';
 
 // Create a new collections objects
 const customer = new Customer();
@@ -61,13 +61,5 @@ const importCustomerById = async (customerId: string) => {
 //     }
 // };
 
-const deactivateCustomer = async function (customerId: string) {
-    // Find the customer document
-    await customer.deactivate(customerId);
-    await credentials.deactivate(customerId);
-    await cpg.deactivate(customerId);
-};
-
 importCustomerById(process.argv[2]);
 // deleteDashboards();
-// deactivateCustomer(process.argv[2]);

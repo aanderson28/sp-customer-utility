@@ -69,6 +69,7 @@ class Credentials {
                 { customer_id: getMongoId(customerId), active: true },
                 { $set: { active: false } }
             );
+            client.close();
         } catch (e) {
             console.warn(e);
         }
