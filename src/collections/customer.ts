@@ -34,6 +34,21 @@ class Customer {
             console.log(e);
         }
     }
+
+    // Set the rl-customer active flag to false
+    async deactivate(customerId: string) {
+        try {
+            const client = await DbClient.connect('source');
+            const collection = client.db(database).collection(collectionName);
+            await collection.updateOne(
+                { _id: getMongoId(customerId) },
+                { $set: { active: false } }
+            );
+            client.close();
+        } catch (e) {
+            console.warn(e);
+        }
+    }
 }
 
 export default Customer;

@@ -45,10 +45,10 @@ class Credentials {
                 {
                     $set: {
                         customer_id: getMongoId(customer_id),
-                        suppliers: suppliers.map(supplier => {
+                        suppliers: suppliers.map((supplier) => {
                             return getMongoId(supplier);
                         }),
-                        vendors: vendors.map(vendor => {
+                        vendors: vendors.map((vendor) => {
                             return getMongoId(vendor);
                         }),
                     },
@@ -57,6 +57,20 @@ class Credentials {
             client.close();
         } catch (e) {
             throw new Error(e);
+        }
+    }
+
+    // Sets the rl-credentials active flag to false
+    async deactivate(customerId: string) {
+        try {
+            const client = await DbClient.connect('source');
+            const collection = client.db(database).collection(collectionName);
+            await collection.updateOne(
+                { customer_id: getMongoId(customerId), active: true },
+                { $set: { active: false } }
+            );
+        } catch (e) {
+            console.warn(e);
         }
     }
 }

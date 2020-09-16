@@ -61,5 +61,13 @@ const importCustomerById = async (customerId: string) => {
 //     }
 // };
 
+const deactivateCustomer = async function (customerId: string) {
+    // Find the customer document
+    await customer.deactivate(customerId);
+    await credentials.deactivate(customerId);
+    await cpg.deactivate(customerId);
+};
+
 importCustomerById(process.argv[2]);
 // deleteDashboards();
+// deactivateCustomer(process.argv[2]);

@@ -53,6 +53,20 @@ class Cpg {
             console.error(e);
         }
     }
+
+    // Turns off machine learning for this CPG
+    async deactivate(customerId: string) {
+        try {
+            const client = await DbClient.connect('source');
+            const collection = client.db(database).collection(collectionName);
+            await collection.updateOne(
+                { 'dataStreams.streamId': customerId },
+                { $set: { 'machineLearning.active': false } }
+            );
+        } catch (e) {
+            console.warn(e);
+        }
+    }
 }
 
 export default Cpg;
