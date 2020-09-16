@@ -18,6 +18,8 @@ const deactivateCustomer = async function (customerId: string) {
         await credentials.deactivate(customerId);
         await cpg.deactivate(customerId);
         console.log('Finished', 'The Customer has been deactivated successfully!');
+    } else {
+        console.error('Forgot to pass the Customer Id');
     }
 };
 
