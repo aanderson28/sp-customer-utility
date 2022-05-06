@@ -20,6 +20,7 @@
     },
     "dependencies": {
         "assert": "^2.0.0",
+        "axios": "^0.27.2",
         "mongodb": "^3.2.7"
     },
     "devDependencies": {

@@ -21,6 +21,24 @@ class Customer {
         }
     }
 
+    // Find the Customer based on the Customer _ID
+    async findList(customerIds: string[]) {
+        try {
+            const customerObjectIds = customerIds.map((r) => getMongoId(r));
+            const client = await DbClient.connect('source');
+            const collection = client.db(database).collection(collectionName);
+            const results = await collection.find({
+                _id: {
+                    $in: customerObjectIds,
+                },
+            });
+            await client.close();
+            return toJSON(results);
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
     // Imports the Customer document
     // Inserts the document if not found
     async import(document: ICustomer) {

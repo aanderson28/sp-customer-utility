@@ -23,6 +23,7 @@ const importCustomerById = async (customerId: string) => {
             // Find and import the cpgs document
             const cpgDocument = await cpg.find(customerId);
             await cpg.import(cpgDocument);
+            // await cpg.deactivate(customerId);
             // Find & Import the credentials document
             const cred = await credentials.find(cusDocument);
             await credentials.import(cred);

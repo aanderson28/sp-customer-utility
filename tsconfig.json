@@ -10,6 +10,7 @@
         "outDir": "bin",
         "allowJs": true,
         "lib": ["es2017", "esnext.asynciterable"],
+        "skipLibCheck": true,
     },
     "include": [
         "src/**/*",

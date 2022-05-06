@@ -25,6 +25,27 @@ class Credentials {
         }
     }
 
+    // Finds the active credntials for the customer_id
+    async findByCustomer(customer_id: string) {
+        try {
+            const client = await DbClient.connect('source');
+            const collection = client.db(database).collection(collectionName);
+            const result = await collection.findOne({
+                $and: [
+                    {
+                        customer_id:
+                            typeof customer_id == 'string' ? getMongoId(customer_id) : customer_id,
+                    },
+                    { active: true },
+                ],
+            });
+            await client.close();
+            return toJSON(result);
+        } catch (e) {
+            throw new Error(e);
+        }
+    }
+
     /*
         Imports the Credentials document
         Inserts the document if not found
