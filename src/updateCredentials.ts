@@ -1,6 +1,6 @@
 import axios from 'axios';
 import Credentials from './collections/credentials';
-// const axios = require('axios');
+import IUnsuccessfulCreds from './models/unsuccessfulCreds';
 
 // SET TO LIST OF CUSTOMER IDs
 const customer_ids = ['CUSTOMER_IDs'];
@@ -11,7 +11,7 @@ async function getCredential(customer_id: string) {
 }
 
 async function updateCreds() {
-    let unsuccessful = [];
+    let unsuccessful: IUnsuccessfulCreds[];
     for (const key in customer_ids) {
         const cred = await getCredential(customer_ids[key]);
         if (cred) {
@@ -55,6 +55,11 @@ async function updateCreds() {
             }
         } else {
             console.warn(`No credentials found for Customer ID ${customer_ids[key]}`);
+            unsuccessful.push({
+                customer_id: customer_ids[key],
+                username: cred,
+                error: 'No customer found in collection.',
+            });
         }
     }
     console.warn('Unsuccessfully Updated:', unsuccessful);
