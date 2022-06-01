@@ -10,7 +10,7 @@ async function getCredential(customer_id: string) {
     return await credentials.findByCustomer(customer_id);
 }
 
-async function updateCreds() {
+(async function updateCreds() {
     let unsuccessful: IUnsuccessfulCreds[];
     for (const key in customer_ids) {
         const cred = await getCredential(customer_ids[key]);
@@ -30,39 +30,41 @@ async function updateCreds() {
             if (cred.expired) {
                 try {
                     await axios(config);
-                    console.log(`Credentials Updated for: ${cred.username} - ${customer_ids[key]}`);
+                    console.log(
+                        `${key} - Credentials Updated for: ${cred.username} - ${customer_ids[key]}`
+                    );
                 } catch (error) {
                     if (error.response && error.response.status === 401) {
                         console.error(
-                            `Invalid credentials for ${cred.username} - ${customer_ids[key]}`
+                            `${key} - Invalid credentials for ${cred.username} - ${customer_ids[key]}`
                         );
                     } else {
-                        console.log('Error Code:', error.code);
+                        console.log(`${key} - Error Code:`, error.code);
                         console.log('Error Message:', error.message);
                         console.log('Request Data:', error.config.data);
                         console.log('Request URL:', error.config.url);
                     }
-                    unsuccessful.push({
-                        customer_id: customer_ids[key],
-                        username: cred.username,
-                        error: error.message,
-                    });
+                    // unsuccessful.push({
+                    //     customer_id: customer_ids[key],
+                    //     username: cred.username,
+                    //     error: error.message,
+                    // });
                 }
             } else {
                 console.warn(
-                    `The credentials are not expired: ${cred.username} - ${customer_ids[key]}`
+                    `${key} - The credentials are not expired: ${cred.username} - ${customer_ids[key]}`
                 );
             }
         } else {
-            console.warn(`No credentials found for Customer ID ${customer_ids[key]}`);
-            unsuccessful.push({
-                customer_id: customer_ids[key],
-                username: cred,
-                error: 'No customer found in collection.',
-            });
+            console.warn(`${key} - No credentials found for Customer ID ${customer_ids[key]}`);
+            // unsuccessful.push({
+            //     customer_id: customer_ids[key],
+            //     username: cred,
+            //     error: 'No customer found in collection.',
+            // });
         }
     }
-    console.warn('Unsuccessfully Updated:', unsuccessful);
-}
-
-updateCreds();
+    if (unsuccessful && unsuccessful.length > 0) {
+        console.warn('Unsuccessfully Updated:', unsuccessful);
+    }
+})();

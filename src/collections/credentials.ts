@@ -6,6 +6,7 @@ import ICredentials from '../models/credentials';
 import DbClient from '../connect';
 
 const database = 'retail-link';
+const canada = 'retail-link-canada';
 const collectionName = 'rl-credentials';
 
 // Create class for Credentials collection
@@ -30,15 +31,30 @@ class Credentials {
         try {
             const client = await DbClient.connect('source');
             const collection = client.db(database).collection(collectionName);
-            const result = await collection.findOne({
-                $and: [
-                    {
-                        customer_id:
-                            typeof customer_id == 'string' ? getMongoId(customer_id) : customer_id,
-                    },
-                    { active: true },
-                ],
-            });
+            const collection2 = client.db(canada).collection(collectionName);
+            const result =
+                (await collection.findOne({
+                    $and: [
+                        {
+                            customer_id:
+                                typeof customer_id == 'string'
+                                    ? getMongoId(customer_id)
+                                    : customer_id,
+                        },
+                        { active: true },
+                    ],
+                })) ||
+                (await collection2.findOne({
+                    $and: [
+                        {
+                            customer_id:
+                                typeof customer_id == 'string'
+                                    ? getMongoId(customer_id)
+                                    : customer_id,
+                        },
+                        { active: true },
+                    ],
+                }));
             await client.close();
             return toJSON(result);
         } catch (e) {
